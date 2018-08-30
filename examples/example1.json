@@ -1,0 +1,29 @@
+{
+    "wombat_component": "slideshow",
+    "stimuli": [
+        {
+            "name": "wombat1",
+            "path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat1.jpg"
+        },
+        {
+            "name": "wombat2",
+            "path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat2.jpg",
+            "duration": 4000
+        },
+        {
+            "name": "wombat3",
+            "path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat3.jpg"
+        }
+    ],
+    "repeats": 1,
+    "advance_behavior": {
+        "timeout": 200,
+        "inputs": {
+            "mouse": [],
+            "keys": [
+                "space"
+            ]
+        }
+    },
+    "randomise": true
+}
