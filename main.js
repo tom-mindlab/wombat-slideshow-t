@@ -57,7 +57,6 @@ function showScreen(screen_obj, screen_element) {
 export default async function (config, callback) {
 	Mousetrap.reset();
 	const lang = Object.assign({}, utils.buildLanguage(languages, config), config.language_options);
-	console.log(lang);
 	const DOM = document.createElement(`div`);
 	DOM.innerHTML = template;
 
@@ -83,9 +82,9 @@ export default async function (config, callback) {
 	DOM.querySelector(`#display`).textContent = ``;
 	DOM.querySelector(`#instruction-message`).innerHTML = generateControlsMessage(config.inputs, lang.controls_message);
 	if ((config.inputs.keys.concat(config.inputs.mouse)).length === 0) {
-		DOM.querySelector(`#instruction-message`).style.display = `none`;
+		DOM.querySelector(`#instruction-message`).style.visibility = `hidden`;
 	}
-	await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs, config.default_duration, 'duration', config.randomise);
+	await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs, config.default_duration, `duration`, `min_duration`, config.randomise);
 	DOM.querySelector(`#instruction-message`).remove();
 
 	screen.exit(`fade`, () => {

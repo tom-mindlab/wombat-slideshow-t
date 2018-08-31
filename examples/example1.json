@@ -5,11 +5,13 @@
         {
             "name": "wombat1",
             "path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat1.jpg",
-            "duration": 11000
+            "min_duration": 2000,
+            "duration": 1000
         },
         {
             "name": "wombat2",
             "path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat2.jpg",
+            "min_duration": 5000,
             "duration": 42000
         },
         {
@@ -27,7 +29,9 @@
         "mouse": [
             "left"
         ],
-        "keys": []
+        "keys": [
+            "space"
+        ]
     },
     "language_options": {
         "controls_message": {

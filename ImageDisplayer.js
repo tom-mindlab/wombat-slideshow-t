@@ -18,7 +18,7 @@ export class ImageDisplayer {
         return this.stimuli.map(stim => stim.path);
     }
 
-    async slideshow(dom_container, inputs, default_duration, duration_key, randomise) {
+    async slideshow(dom_container, inputs, default_duration, duration_key, min_duration_key, randomise) {
         dom_container.querySelectorAll(`img.image-displayer`).forEach(element => {
             element.remove();
         });
@@ -28,24 +28,30 @@ export class ImageDisplayer {
             display_image.className = `image-displayer`;
             const d_duration = (typeof default_duration === `undefined`) ? 0 : default_duration;
             const duration = (typeof stim[`${duration_key}`] === `undefined`) ? d_duration : stim[`${duration_key}`];
+            const min_duration = (typeof stim[`${min_duration_key}`] === `undefined`) ? 0 : stim[`${min_duration_key}`];
             dom_container.appendChild(display_image);
             await new Promise(res => $(dom_container).fadeIn(200, res));
-            await Promise.race([asycSetTimeout(duration), receiveInput(inputs, dom_container)]);
+            await Promise.race([
+                asyncSetTimeout(duration),
+                receiveInput(inputs, dom_container, min_duration)
+            ]);
             await new Promise(res => $(dom_container).fadeOut(200, res));
             dom_container.removeChild(display_image);
         }
     }
 }
 
-function asycSetTimeout(ms_delay) {
+function asyncSetTimeout(ms_delay) {
     return new Promise(res => setTimeout(res, ms_delay));
 }
 
-function receiveInput(inputs, target_container) {
+async function receiveInput(inputs, target_container, delay) {
     const mouse_button_mappings = new Map();
     mouse_button_mappings.set(0, `left`);
     mouse_button_mappings.set(1, `middle`);
     mouse_button_mappings.set(2, `right`);
+
+    await asyncSetTimeout(delay);
 
     return new Promise(res => {
         for (const key of inputs.keys) {
