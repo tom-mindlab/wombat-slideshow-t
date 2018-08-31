@@ -83,7 +83,7 @@ export default async function (config, callback) {
 	if ((config.inputs.keys.concat(config.inputs.mouse)).length === 0) {
 		DOM.querySelector(`#instruction-message`).style.display = `none`;
 	}
-	await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs, config.default_duration, 'duration');
+	await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs, config.default_duration, 'duration', config.randomise);
 	DOM.querySelector(`#instruction-message`).remove();
 
 	screen.exit(`fade`, () => {

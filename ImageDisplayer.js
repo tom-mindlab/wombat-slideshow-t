@@ -1,5 +1,6 @@
 import Mousetrap from "mousetrap";
 import $ from "jquery";
+import ldShuffle from "lodash/shuffle";
 
 export class ImageDisplayer {
     constructor(stimuli) {
@@ -17,11 +18,12 @@ export class ImageDisplayer {
         return this.stimuli.map(stim => stim.path);
     }
 
-    async slideshow(dom_container, inputs, default_duration, duration_key) {
+    async slideshow(dom_container, inputs, default_duration, duration_key, randomise) {
         dom_container.querySelectorAll(`img.image-displayer`).forEach(element => {
             element.remove();
         });
-        for (const stim of this.stimuli) {
+        const display_stim = (randomise) ? ldShuffle(this.stimuli) : this.stimuli;
+        for (const stim of display_stim) {
             const display_image = stim.image.cloneNode();
             display_image.className = `image-displayer`;
             const d_duration = (typeof default_duration === `undefined`) ? 0 : default_duration;
