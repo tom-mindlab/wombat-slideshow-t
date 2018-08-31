@@ -1,5 +1,5 @@
 {
-    "wombat_component": "slideshow",
+    "wombat_component": "slideshow-t",
     "language": "EN",
     "stimuli": [
         {
@@ -27,21 +27,13 @@
         "mouse": [
             "left"
         ],
-        "keys": [],
-        "message": {
+        "keys": []
+    },
+    "language_options": {
+        "controls_message": {
             "start": "Press ",
             "delim": " or ",
             "end": " to advance."
-        }
-    },
-    "screens": {
-        "intro": {
-            "title": "GET READY PUNK",
-            "message": "OHHHHHHHHHHHH",
-            "continue": {
-                "pending": "loading images...",
-                "ready": "GOGOGO"
-            }
         }
     },
     "randomise": true

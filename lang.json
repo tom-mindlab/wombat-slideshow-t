@@ -1,19 +1,35 @@
 {
     "default": {
-        "inputs": {
-            "message": {
-                "start": "NT ",
-                "delim": " NT ",
-                "end": " NT"
+        "controls_message": {
+            "start": "NT ",
+            "delim": " NT ",
+            "end": " NT"
+        },
+        "screens": {
+            "intro": {
+                "title": "NO TRANSLATION",
+                "message": "NO TRANSLATION",
+                "continue": {
+                    "pending": "NO TRANSLATION",
+                    "ready": "NO TRANSLATION"
+                }
             }
         }
     },
     "EN": {
-        "inputs": {
-            "message": {
-                "start": "Press ",
-                "delim": " or ",
-                "end": " to advance."
+        "controls_message": {
+            "start": "Press ",
+            "delim": " or ",
+            "end": " to advance."
+        },
+        "screens": {
+            "intro": {
+                "title": "Slideshow",
+                "message": "Look at the images",
+                "continue": {
+                    "pending": "Loading...",
+                    "ready": "Continue"
+                }
             }
         }
     }

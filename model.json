@@ -1,68 +1,83 @@
 {
-	"name" : "slideshow",
-	"description" : "A configurable image slideshow",
-	"version" : "0",
-	"start" : "../../main.html",
-	"data" : null,
-	"configuration" : {
-		"type" : "object",
-		"properties" : {
-			"wombat_component" : {
-				"enum" : ["slideshow"],
-				"default" : "slideshow"
+	"name": "slideshow-t",
+	"description": "A configurable image slideshow",
+	"version": "0",
+	"start": "../../main.html",
+	"data": null,
+	"configuration": {
+		"type": "object",
+		"properties": {
+			"wombat_component": {
+				"enum": [
+					"slideshow-t"
+				],
+				"default": "slideshow-t"
 			},
-			"stimuli" : {
-				"type" : "array",
-				"items" : {
-					"type" : "object",
-					"properties" : {
-						"name" : {
-							"type" : "string",
-							"required" : "true"
+			"stimuli": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"name": {
+							"type": "string",
+							"required": "true"
 						},
-						"path" : {
-							"type" : "string",
-							"required" : "true"
+						"path": {
+							"type": "string",
+							"required": "true"
 						},
-						"duration" : {
-							"type" : "number"
+						"duration": {
+							"type": "number"
 						}
 					}
 				}
 			},
-			"repeats" : {
-				"type" : "number",
-				"default" : 1
+			"defaut_duration": {
+				"type": "number",
+				"default": 5000
 			},
-			"duration" : {
-				"type" : "number",
-				"default" : 5000
+			"repeats": {
+				"type": "number",
+				"default": 1
 			},
-			"randomise" : {
-				"type" : "boolean",
-				"default" : false
+			"background": {
+				"type": "object",
+				"properties": {
+					"color": {
+						"type": "string",
+						"required": true
+					},
+					"transition_duration": {
+						"type": "number",
+						"default": 200
+					}
+				},
+				"required": true
+			},
+			"randomise": {
+				"type": "boolean",
+				"default": false
 			}
 		}
 	},
-
-	"default_configuration" : {
-		"stimuli" : [
-	        {
-	            "name" : "wombat1",
-	            "path" : "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat1.jpg"        
-	        },
-	        {
-	            "name" : "wombat2",
-	            "path" : "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat2.jpg",
-	            "duration" : 4000
-	        },
-	        {
-	            "name" : "wombat3",
-	            "path" : "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat3.jpg"
-	        }
-    	],
-		"repeats" : 2,
-		"duration" : 2000,
-		"randomise" : true
+	"default_configuration": {
+		"stimuli": [
+			{
+				"name": "wombat1",
+				"path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat1.jpg"
+			},
+			{
+				"name": "wombat2",
+				"path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat2.jpg",
+				"duration": 4000
+			},
+			{
+				"name": "wombat3",
+				"path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat3.jpg"
+			}
+		],
+		"repeats": 2,
+		"duration": 2000,
+		"randomise": true
 	}
 }

@@ -16,17 +16,17 @@ async function resolveStimuli(stimuli) {
 	return resolved_stimuli;
 }
 
-function generateControlsMessage(inputs) {
-	let message = inputs.message.start;
+function generateControlsMessage(inputs, message_config) {
+	let message = message_config.start;
 	for (const [index, key] of inputs.keys.entries()) {
 		message += `<kbd>${key}</kbd>`;
-		message += (index === (inputs.keys.concat(inputs.mouse)).length - 1) ? ` ` : inputs.message.delim;
+		message += (index === (inputs.keys.concat(inputs.mouse)).length - 1) ? ` ` : message_config.delim;
 	}
 	for (const [index, button] of inputs.mouse.entries()) {
 		message += `<kbd>${button} mouse button</kbd>`;
-		message += (index + inputs.keys.length === (inputs.keys.concat(inputs.mouse)).length - 1) ? ` ` : inputs.message.delim;
+		message += (index + inputs.keys.length === (inputs.keys.concat(inputs.mouse)).length - 1) ? ` ` : message_config.delim;
 	}
-	message += inputs.message.end;
+	message += message_config.end;
 
 	return message;
 }
@@ -57,6 +57,7 @@ function showScreen(screen_obj, screen_element) {
 export default async function (config, callback) {
 	Mousetrap.reset();
 	const lang = Object.assign({}, utils.buildLanguage(languages, config), config.language_options);
+	console.log(lang);
 	const DOM = document.createElement(`div`);
 	DOM.innerHTML = template;
 
@@ -64,11 +65,12 @@ export default async function (config, callback) {
 
 	const screen_element = DOM.querySelector('#screen');
 
-	showScreen(config.screens.intro, screen_element);
+	showScreen(lang.screens.intro, screen_element);
 	const image_displayer = new ImageDisplayer(await resolveStimuli(config.stimuli));
 	screen_element.dispatchEvent((() => {
 		return new CustomEvent(`continue_ready`);
 	})());
+
 	await new Promise(res => {
 		screen_element.querySelector('#continue').onclick = () => {
 			screen_element.style.display = `none`;
@@ -79,7 +81,7 @@ export default async function (config, callback) {
 	await fadeBackgroundToColour(DOM.querySelector(`.slideshow-t`), config.background);
 	DOM.querySelector(`#instruction-message`).style.visibility = `visible`;
 	DOM.querySelector(`#display`).textContent = ``;
-	DOM.querySelector(`#instruction-message`).innerHTML = generateControlsMessage(Object.assign(config.inputs, lang.inputs));
+	DOM.querySelector(`#instruction-message`).innerHTML = generateControlsMessage(config.inputs, lang.controls_message);
 	if ((config.inputs.keys.concat(config.inputs.mouse)).length === 0) {
 		DOM.querySelector(`#instruction-message`).style.display = `none`;
 	}
