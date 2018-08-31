@@ -1,115 +1,82 @@
-import './slideshow.less'
-import { screen, utils, controls } from 'wombat'
-import template from './slideshow.html'
+import { screen, utils } from "wombat";
+import languages from "./lang.json";
+import "./slideshow-t.less";
+import template from "./slideshow-t.html";
 
-var CONFIG,
-	ONCOMPLETE,
-	STIMULI,
-	IMAGES,
-	_mainScreen,
-	_display
-export default function (config, cb) {
+import { pathsToImages, ImageDisplayer } from "./ImageDisplayer";
 
-	CONFIG = config
-	ONCOMPLETE = cb
-
-	async.series([
-
-		prepareConfig,
-		prepareUI,
-		fadeToBlack
-
-	], function () {
-		next()
-	})
-
-}
-
-var priorBackground;
-
-function fadeToBlack(cb) {
-
-	bindInputs(CONFIG.advance_behavior.inputs);
-	priorBackground = _mainScreen.css('background-color')
-
-	_mainScreen.animate({
-		backgroundColor: '#000'
-	}, 2000, function () {
-		_display.domElement.fadeIn('fast', cb)
-	})
-}
-
-
-function fadeFromBlack(cb) {
-
-	Mousetrap.reset();
-	_mainScreen.animate({
-		backgroundColor: priorBackground
-	}, 2000, screen.exit('fade', cb))
-}
-
-
-
-function next() {
-
-	// Finishing condition
-	if (_.isEmpty(STIMULI)) return fadeFromBlack(ONCOMPLETE)
-
-	var nextStimuli = STIMULI.shift()
-
-	var nextImage = IMAGES[nextStimuli.name].img
-
-	_display.set(nextImage)
-	_display.show()
-
-	utils.delay(nextStimuli.duration, function () {
-		_display.hide()
-		utils.delay(1000, next)
-	})
-}
-
-function bindInputs(inputs) {
-	Mousetrap.reset();
-	for (const key of inputs.keys) {
-		Mousetrap.bind(key, next);
-		console.log(key);
+async function resolveStimuli(stimuli) {
+	const images = await pathsToImages(stimuli.map(stim => stim.path));
+	const resolved_stimuli = [];
+	for (const [index, stim] of stimuli.entries()) {
+		resolved_stimuli.push(Object.assign({}, stim, { image: images[index] }));
 	}
+	return resolved_stimuli;
 }
 
-function prepareConfig(cb) {
+function generateControlsMessage(inputs) {
+	let message = inputs.message.start;
+	for (const [index, key] of inputs.keys.entries()) {
+		message += `<kbd>${key}</kbd>`;
+		message += (index === inputs.keys.length - 1) ? ` ` : inputs.message.delim;
+	}
+	message += inputs.message.end;
 
+	return message;
+}
 
-	console.log(CONFIG)
+function asycSetTimeout(ms_delay) {
+	return new Promise(res => setTimeout(res, ms_delay));
+}
 
-	var stimuli = _.map(CONFIG.stimuli, function (s) {
-		if (!s.duration) s.duration = CONFIG.duration || 3000
-		return s
-	})
+async function fadeBackgroundToColour(DOM, { colour = `#121212`, duration = 250 }) {
+	DOM.setAttribute(`style`, `background-color: ${colour}; transition: background-color ${duration}ms linear`);
+	await asycSetTimeout(duration);
+}
 
-	if (!stimuli.length == CONFIG.stimuli.length) throw alert('Dupli2te stimuli names')
+function showScreen(screen_obj, screen_element) {
+	screen_element.querySelector(`#title`).textContent = screen_obj.title;
+	screen_element.querySelector(`#message`).textContent = screen_obj.message;
+	const continue_button = screen_element.querySelector(`#continue`);
+	continue_button.disabled = true;
+	continue_button.value = screen_obj.continue.pending;
 
-	stimuli = utils.repeat(stimuli, CONFIG.repeats || 1)
-
-	if (CONFIG.randomise == true) stimuli = utils.shuffle(stimuli)
-
-	STIMULI = stimuli // outer scope reference
-	utils.preloadImages(CONFIG.stimuli, function (images) {
-		console.log(images)
-		IMAGES = images
-		cb()
-	})
+	screen_element.addEventListener(`continue_ready`, () => {
+		continue_button.value = screen_obj.continue.ready;
+		continue_button.disabled = false;
+	});
 
 }
 
+export default async function (config, callback) {
+	const lang = Object.assign({}, utils.buildLanguage(languages, config), config.language_options);
+	const DOM = document.createElement(`div`);
+	DOM.innerHTML = template;
 
+	screen.enter(DOM, `fade`);
 
-function prepareUI(cb) {
+	const screen_element = DOM.querySelector('#screen');
 
-	_mainScreen = $(template).clone()
+	showScreen(config.screens.intro, screen_element);
+	const image_displayer = new ImageDisplayer(await resolveStimuli(config.stimuli));
+	screen_element.dispatchEvent((() => {
+		return new CustomEvent(`continue_ready`);
+	})());
+	await new Promise(res => {
+		screen_element.querySelector('#continue').onclick = () => {
+			screen_element.style.display = `none`;
+			res();
+		};
+	})
 
-	_display = controls.display(_mainScreen.find('.display'))
-	_display.hide()
+	await fadeBackgroundToColour(DOM.querySelector(`.slideshow-t`), config.background);
+	DOM.querySelector(`#instruction-message`).style.visibility = `visible`;
+	DOM.querySelector(`#display`).textContent = ``;
+	DOM.querySelector(`#instruction-message`).innerHTML = generateControlsMessage(Object.assign(config.inputs, lang.inputs));
+	await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs.keys, config.default_duration, 'duration');
+	DOM.querySelector(`#instruction-message`).remove();
 
-	screen.enter(_mainScreen, 'fade', cb)
-
+	screen.exit(`fade`, () => {
+		callback({}, []);
+	})
 }

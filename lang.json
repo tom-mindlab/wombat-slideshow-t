@@ -1,0 +1,20 @@
+{
+    "default": {
+        "inputs": {
+            "message": {
+                "start": "NT ",
+                "delim": " NT ",
+                "end": " NT"
+            }
+        }
+    },
+    "EN": {
+        "inputs": {
+            "message": {
+                "start": "Press ",
+                "delim": " or ",
+                "end": " to advance."
+            }
+        }
+    }
+}

@@ -1,28 +1,48 @@
 {
     "wombat_component": "slideshow",
+    "language": "EN",
     "stimuli": [
         {
             "name": "wombat1",
-            "path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat1.jpg"
+            "path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat1.jpg",
+            "duration": 11000
         },
         {
             "name": "wombat2",
             "path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat2.jpg",
-            "duration": 4000
+            "duration": 42000
         },
         {
             "name": "wombat3",
             "path": "https://manatee-resources.s3.amazonaws.com/wombat-default-stimuli/wombat3.jpg"
         }
     ],
+    "default_duration": 20000,
     "repeats": 1,
-    "advance_behavior": {
-        "timeout": 200,
-        "inputs": {
-            "mouse": [],
-            "keys": [
-                "space"
-            ]
+    "background": {
+        "colour": "#212121",
+        "transition_duration": 200
+    },
+    "inputs": {
+        "mouse": [],
+        "keys": [
+            "space",
+            "A"
+        ],
+        "message": {
+            "start": "Press ",
+            "delim": " or ",
+            "end": " to advance."
+        }
+    },
+    "screens": {
+        "intro": {
+            "title": "GET READY PUNK",
+            "message": "OHHHHHHHHHHHH",
+            "continue": {
+                "pending": "loading images...",
+                "ready": "GOGOGO"
+            }
         }
     },
     "randomise": true
