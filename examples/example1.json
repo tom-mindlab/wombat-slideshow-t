@@ -27,9 +27,7 @@
         "mouse": [
             "left"
         ],
-        "keys": [
-            "space"
-        ],
+        "keys": [],
         "message": {
             "start": "Press ",
             "delim": " or ",

@@ -80,7 +80,7 @@ export default async function (config, callback) {
 	DOM.querySelector(`#instruction-message`).style.visibility = `visible`;
 	DOM.querySelector(`#display`).textContent = ``;
 	DOM.querySelector(`#instruction-message`).innerHTML = generateControlsMessage(Object.assign(config.inputs, lang.inputs));
-	if (config.inputs.keys.length === 0) {
+	if ((config.inputs.keys.concat(config.inputs.mouse)).length === 0) {
 		DOM.querySelector(`#instruction-message`).style.display = `none`;
 	}
 	await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs, config.default_duration, 'duration');
