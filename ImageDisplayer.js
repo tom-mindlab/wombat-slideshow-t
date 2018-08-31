@@ -28,7 +28,7 @@ export class ImageDisplayer {
             const duration = (typeof stim[`${duration_key}`] === `undefined`) ? d_duration : stim[`${duration_key}`];
             dom_container.appendChild(display_image);
             await new Promise(res => $(dom_container).fadeIn(200, res));
-            await Promise.race([asycSetTimeout(duration), receiveInput(inputs)]);
+            await Promise.race([asycSetTimeout(duration), receiveInput(inputs, dom_container)]);
             await new Promise(res => $(dom_container).fadeOut(200, res));
             dom_container.removeChild(display_image);
         }
@@ -39,12 +39,26 @@ function asycSetTimeout(ms_delay) {
     return new Promise(res => setTimeout(res, ms_delay));
 }
 
-function receiveInput(inputs) {
+function receiveInput(inputs, target_container) {
+    const mouse_button_mappings = new Map();
+    mouse_button_mappings.set(0, `left`);
+    mouse_button_mappings.set(1, `middle`);
+    mouse_button_mappings.set(2, `right`);
+
     return new Promise(res => {
-        Mousetrap.reset();
-        for (const input of inputs) {
-            Mousetrap.bind([input.toLowerCase(), input.toUpperCase()], res);
+        for (const key of inputs.keys) {
+            Mousetrap.bind([key.toLowerCase(), key.toUpperCase()], res);
         }
+
+        target_container.addEventListener(`click`, (click_event) => {
+            for (const mouse_button of inputs.mouse) {
+                if (mouse_button_mappings.get(click_event.button) === mouse_button.toLowerCase()) {
+                    res();
+                }
+            }
+
+        })
+
     });
 }
 

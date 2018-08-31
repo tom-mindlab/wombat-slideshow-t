@@ -24,10 +24,11 @@
         "transition_duration": 200
     },
     "inputs": {
-        "mouse": [],
+        "mouse": [
+            "left"
+        ],
         "keys": [
-            "space",
-            "A"
+            "space"
         ],
         "message": {
             "start": "Press ",

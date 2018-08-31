@@ -3,6 +3,8 @@ import languages from "./lang.json";
 import "./slideshow-t.less";
 import template from "./slideshow-t.html";
 
+import Mousetrap from "mousetrap";
+
 import { pathsToImages, ImageDisplayer } from "./ImageDisplayer";
 
 async function resolveStimuli(stimuli) {
@@ -18,7 +20,11 @@ function generateControlsMessage(inputs) {
 	let message = inputs.message.start;
 	for (const [index, key] of inputs.keys.entries()) {
 		message += `<kbd>${key}</kbd>`;
-		message += (index === inputs.keys.length - 1) ? ` ` : inputs.message.delim;
+		message += (index === (inputs.keys.concat(inputs.mouse)).length - 1) ? ` ` : inputs.message.delim;
+	}
+	for (const [index, button] of inputs.mouse.entries()) {
+		message += `<kbd>${button} mouse button</kbd>`;
+		message += (index + inputs.keys.length === (inputs.keys.concat(inputs.mouse)).length - 1) ? ` ` : inputs.message.delim;
 	}
 	message += inputs.message.end;
 
@@ -49,6 +55,7 @@ function showScreen(screen_obj, screen_element) {
 }
 
 export default async function (config, callback) {
+	Mousetrap.reset();
 	const lang = Object.assign({}, utils.buildLanguage(languages, config), config.language_options);
 	const DOM = document.createElement(`div`);
 	DOM.innerHTML = template;
@@ -73,7 +80,10 @@ export default async function (config, callback) {
 	DOM.querySelector(`#instruction-message`).style.visibility = `visible`;
 	DOM.querySelector(`#display`).textContent = ``;
 	DOM.querySelector(`#instruction-message`).innerHTML = generateControlsMessage(Object.assign(config.inputs, lang.inputs));
-	await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs.keys, config.default_duration, 'duration');
+	if (config.inputs.keys.length === 0) {
+		DOM.querySelector(`#instruction-message`).style.display = `none`;
+	}
+	await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs, config.default_duration, 'duration');
 	DOM.querySelector(`#instruction-message`).remove();
 
 	screen.exit(`fade`, () => {
