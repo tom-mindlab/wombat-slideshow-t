@@ -84,7 +84,10 @@ export default async function (config, callback) {
 	if ((config.inputs.keys.concat(config.inputs.mouse)).length === 0) {
 		DOM.querySelector(`#instruction-message`).style.visibility = `hidden`;
 	}
-	await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs, config.default_duration, `duration`, `min_duration`, config.randomise);
+	for (let iteration = 0; iteration < config.repeats + 1; ++iteration) {
+		console.log(iteration);
+		await image_displayer.slideshow(DOM.querySelector(`#display`), config.inputs, config.default_duration, `duration`, `min_duration`, config.randomise);
+	}
 	DOM.querySelector(`#instruction-message`).remove();
 
 	screen.exit(`fade`, () => {

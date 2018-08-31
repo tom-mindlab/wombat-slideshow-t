@@ -1,6 +1,5 @@
 {
     "wombat_component": "slideshow-t",
-    "language": "EN",
     "stimuli": [
         {
             "name": "wombat1",
@@ -33,12 +32,13 @@
             "space"
         ]
     },
+    "randomise": true,
+    "language": "EN",
     "language_options": {
         "controls_message": {
             "start": "Press ",
             "delim": " or ",
             "end": " to advance."
         }
-    },
-    "randomise": true
+    }
 }
